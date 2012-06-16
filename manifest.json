@@ -1,0 +1,36 @@
+{
+    "android": {
+        "entryPoint": "runtimeNative.launchClient", 
+        "flurryKey": "", 
+        "tapjoyDaily": {}, 
+        "tapjoyId": "", 
+        "tapjoyKey": "", 
+        "versionCode": 1
+    }, 
+    "appID": "b8aa36bd8cd640b9bdc748e1cb88b459", 
+    "description": "Game description", 
+    "facebookEnabled": false, 
+    "groups": {}, 
+    "handshakeEnabled": false, 
+    "icons": {}, 
+    "ios": {
+        "entryPoint": "runtimeNative.launchClient", 
+        "flurryKey": "", 
+        "tapjoyId": "", 
+        "tapjoyKey": ""
+    }, 
+    "nativeURLScheme": "tealeaf", 
+    "resources": {}, 
+    "shortName": "b8aa36bd8cd640b9bdc748e1cb88b459", 
+    "studio": {
+        "domain": "wee.cat", 
+        "name": "Wee Cat Games", 
+        "stagingDomain": "staging.wee.cat"
+    }, 
+    "supportedOrientations": [
+        "portrait"
+    ], 
+    "targets": {}, 
+    "title": "empty project", 
+    "version": "0.0.0"
+}
