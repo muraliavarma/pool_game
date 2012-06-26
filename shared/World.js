@@ -6,7 +6,6 @@ import timestep.TextView as TextView;
 import timestep.device;
 
 exports = Class(UIView, function(supr) {
-    //class contructor
     this.init = function() {
         supr(this, "init", arguments);
 

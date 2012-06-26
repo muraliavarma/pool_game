@@ -1,8 +1,12 @@
-import lib.PubSub as PubSub;
+"use import";
 
-exports = Class(PubSub, function(supr){
+import timestep.View as View;
+import timestep.TextView as TextView;
+
+exports = Class(View, function(supr) {
 
 	this.init = function() {
+		supr(this, "init", arguments);
 		this.camera = {
         	x: 0,
         	y: 0,
@@ -16,9 +20,25 @@ exports = Class(PubSub, function(supr){
 			offsetX: 100,
 			offsetY: 100
 		};
+
+		this.subscribe('turnRight', this, '_turnRight');
+		this.subscribe('turnLeft', this, '_turnLeft');
 	}
 
-	this.toCanvas = function(vertex){
+	this.tick = function() {
+		if(this.isTurnRight){
+			this.camera.ry += 0.01;
+			this.camera.z = 400 - Math.cos(this.camera.ry) * 400;
+			this.camera.x = Math.sin(this.camera.ry) * 400;
+		}
+		else if(this.isTurnLeft){
+			this.camera.ry -= 0.01;
+			this.camera.z = 400 - Math.cos(this.camera.ry) * 400;
+			this.camera.x = Math.sin(this.camera.ry) * 400;
+		}
+	}
+
+	this.toCanvas = function(vertex) {
 		var camera = this.camera;
 		var dx = vertex.x - camera.x;
 		var dy = vertex.y - camera.y;
@@ -35,6 +55,14 @@ exports = Class(PubSub, function(supr){
 		}
 
 		return {x: posX - size/2, y: posY - size/2, s: size};
+	}
+
+	this._turnRight = function(isTurn) {
+		this.isTurnRight = isTurn;
+	}
+
+	this._turnLeft = function(isTurn) {
+		this.isTurnLeft = isTurn;
 	}
 
 });

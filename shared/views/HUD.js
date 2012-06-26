@@ -1,5 +1,6 @@
 "use import";
 
+import timestep.ImageView as ImageView;
 import timestep.ui.UIView as UIView;
 import timestep.TextView as TextView;
 
@@ -11,16 +12,44 @@ exports = Class(UIView, function(supr) {
     }
 
     this.buildView = function() {
-        this.turnRight = new UIView({
-			parent: this,
-			opacity: 0.5,
-			backgroundColor: "#222222",
-			bottom: 50,
-			right: 50,
-			width: 20,
-			height: 20,
-			zIndex: 9999
+    	this.bottomHUD = new UIView({
+    		parent: this,
+    		y: 400,
+    		opacity: 0.5,
+    		backgroundColor: '#222222'
+    	});
+
+        this.turnLeft = new ImageView({
+			parent: this.bottomHUD,
+			autoSize: true,
+			x: 10,
+			y: 10,
+			image: 'resources/images/leftArrow.png'
 		});
+
+        this.turnRight = new ImageView({
+			parent: this.bottomHUD,
+			autoSize: true,
+			x: 50,
+			y: 10,
+			image: 'resources/images/rightArrow.png'
+		});
+
+		this.turnLeft.onInputStart = function() {
+			GC.app.camera.publish('turnLeft', true);
+		}
+
+		this.turnLeft.onInputOut = function() {
+			GC.app.camera.publish('turnLeft', false);
+		}
+
+		this.turnRight.onInputStart = function() {
+			GC.app.camera.publish('turnRight', true);
+		}
+
+		this.turnRight.onInputOut = function() {
+			GC.app.camera.publish('turnRight', false);
+		}
 
     }
 });
