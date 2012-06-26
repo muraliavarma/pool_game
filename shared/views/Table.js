@@ -3,7 +3,10 @@
 import timestep.ui.UIView as UIView;
 
 exports = Class(UIView, function(supr) {
-    //class contructor
+
+    this.halfTableWidth = 100;
+    this.halfTableLength = 200;
+
     this.init = function() {
         supr(this, "init", arguments);
 
@@ -20,6 +23,13 @@ exports = Class(UIView, function(supr) {
             {x:-100, y:-100, z: 300},
             {x:100, y:-100, z: 300}
         ];
+
+        this.tableTop = [
+            {x: this.halfTableWidth, y: 0, z: this.halfTableLength},
+            {x: this.halfTableWidth, y: 0, z: -this.halfTableLength},
+            {x: -this.halfTableWidth, y: 0, z: -this.halfTableLength},
+            {x: -this.halfTableWidth, y: 0, z: this.halfTableLength}
+        ];
     }
 
     this.buildView = function() {
@@ -27,11 +37,19 @@ exports = Class(UIView, function(supr) {
     }
 
     this.render = function() {
-    	this.ctx.fillStyle = "#00FF00";
-    	for(var i = 0; i < this.vertices.length; i++){
-    		var vertex = GC.app.camera.toCanvas(this.vertices[i]);
-    		this.ctx.fillRect(vertex.x, vertex.y, vertex.s, vertex.s);
+        this.ctx.beginPath();
+    	for(var i = 0; i < this.tableTop.length; i++){
+    		var vertex = GC.app.camera.toCanvas(this.tableTop[i]);
+            if(i == 0){
+	    		this.ctx.moveTo(vertex.x, vertex.y);
+	    	}
+	    	else{
+	    		this.ctx.lineTo(vertex.x, vertex.y);
+	    	}
     	}
+        this.ctx.closePath();
+        this.ctx.fillStyle = "#00FF00";
+        this.ctx.fill();
     }
 
 });

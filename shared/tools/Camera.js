@@ -5,20 +5,22 @@ import timestep.TextView as TextView;
 
 exports = Class(View, function(supr) {
 
+	this.ROTATE_ANGLE = 0.025;
+	this.ROTATE_RADIUS = 750;
+	this.CAMERA_HEIGHT = -200;
+
 	this.init = function() {
 		supr(this, "init", arguments);
 		this.camera = {
         	x: 0,
-        	y: 0,
-        	z: 0,
+        	y: this.CAMERA_HEIGHT,
+        	z: -this.ROTATE_RADIUS,
         	rx: 0,
         	ry: 0,
         	rz: 0,
-			depth: 350,
-			width: 200,
-			height: 200,
-			offsetX: 100,
-			offsetY: 100
+			depth: 750,
+			offsetX: 160,
+			offsetY: 0
 		};
 
 		this.subscribe('turnRight', this, '_turnRight');
@@ -27,14 +29,14 @@ exports = Class(View, function(supr) {
 
 	this.tick = function() {
 		if(this.isTurnRight){
-			this.camera.ry += 0.01;
-			this.camera.z = 400 - Math.cos(this.camera.ry) * 400;
-			this.camera.x = Math.sin(this.camera.ry) * 400;
+			this.camera.ry += this.ROTATE_ANGLE;
+			this.camera.z = -Math.cos(this.camera.ry) * this.ROTATE_RADIUS;
+			this.camera.x = Math.sin(this.camera.ry) * this.ROTATE_RADIUS;
 		}
 		else if(this.isTurnLeft){
-			this.camera.ry -= 0.01;
-			this.camera.z = 400 - Math.cos(this.camera.ry) * 400;
-			this.camera.x = Math.sin(this.camera.ry) * 400;
+			this.camera.ry -= this.ROTATE_ANGLE;
+			this.camera.z = -Math.cos(this.camera.ry) * this.ROTATE_RADIUS;
+			this.camera.x = Math.sin(this.camera.ry) * this.ROTATE_RADIUS;
 		}
 	}
 
