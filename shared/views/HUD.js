@@ -2,7 +2,6 @@
 
 import timestep.ui.UIView as UIView;
 import timestep.TextView as TextView;
-import .Table as Table;
 
 exports = Class(UIView, function(supr) {
     //class contructor
@@ -12,6 +11,16 @@ exports = Class(UIView, function(supr) {
     }
 
     this.buildView = function() {
-        this.table = new Table({parent: this, width: this.width, height: this.height, tag: 'table'});
+        this.turnRight = new UIView({
+			parent: this,
+			opacity: 0.5,
+			backgroundColor: "#222222",
+			bottom: 50,
+			right: 50,
+			width: 20,
+			height: 20,
+			zIndex: 9999
+		});
+
     }
 });

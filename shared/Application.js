@@ -4,7 +4,8 @@
   
   //import the GC namespace
   import GC;
-  import .World as World;
+  import .views.Game as Game;
+  import .tools.Camera as Camera;
   
   exports = Class(GC.Application, function() {
   
@@ -16,12 +17,11 @@
       };
   
       this.initUI = function() {
-          //do stuff
+          this.camera = new Camera();
       }
   
       this.launchUI = function() {
-          //create the container view for the Game
-          //pass the root view as an option to be the parent
-          this.world = new World({parent: this.view, width: this.width, height: this.height});
+          this.game = new Game({parent: this.view, width: this.width, height: this.height, tag: 'game'});
+
       }
   });
