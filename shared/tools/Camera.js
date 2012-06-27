@@ -12,12 +12,12 @@ exports = Class(View, function(supr) {
 	this.init = function() {
 		supr(this, "init", arguments);
 		this.camera = {
-        	x: 0,
-        	y: this.CAMERA_HEIGHT,
-        	z: -this.ROTATE_RADIUS,
-        	rx: 0,
-        	ry: 0,
-        	rz: 0,
+			x: 0,
+			y: this.CAMERA_HEIGHT,
+			z: -this.ROTATE_RADIUS,
+			rx: 0,
+			ry: 0,
+			rz: 0,
 			depth: 1000,
 			offsetX: 160,
 			offsetY: this.CAMERA_HEIGHT / 2
@@ -55,7 +55,7 @@ exports = Class(View, function(supr) {
 			var scale = camera.depth / d1z;
 			var posX = scale * d1x + camera.offsetX;
 			var posY = scale * d1y + camera.offsetY;
-			var size = scale * 10;
+			var size = scale;
 		}
 
 		return {x: posX - size/2, y: posY - size/2, s: size};

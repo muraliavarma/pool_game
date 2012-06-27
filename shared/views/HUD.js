@@ -5,21 +5,21 @@ import timestep.ui.UIView as UIView;
 import timestep.TextView as TextView;
 
 exports = Class(UIView, function(supr) {
-    //class contructor
-    this.init = function() {
-        supr(this, "init", arguments);
+	//class contructor
+	this.init = function() {
+		supr(this, "init", arguments);
 
-    }
+	}
 
-    this.buildView = function() {
-    	this.bottomHUD = new UIView({
-    		parent: this,
-    		y: 400,
-    		opacity: 0.5,
-    		backgroundColor: '#222222'
-    	});
+	this.buildView = function() {
+		this.bottomHUD = new UIView({
+			parent: this,
+			y: 400,
+			opacity: 0.5,
+			backgroundColor: '#222222'
+		});
 
-        this.turnLeft = new ImageView({
+		this.turnLeft = new ImageView({
 			parent: this.bottomHUD,
 			autoSize: true,
 			x: 10,
@@ -27,7 +27,7 @@ exports = Class(UIView, function(supr) {
 			image: 'resources/images/leftArrow.png'
 		});
 
-        this.turnRight = new ImageView({
+		this.turnRight = new ImageView({
 			parent: this.bottomHUD,
 			autoSize: true,
 			x: 50,
@@ -51,5 +51,5 @@ exports = Class(UIView, function(supr) {
 			GC.app.camera.publish('TurnRight', false);
 		}
 
-    }
+	}
 });

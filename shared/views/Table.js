@@ -18,13 +18,20 @@ exports = Class(UIView, function(supr) {
 		this._legRadius = 5;
 
 		this._rimHeight = 5;
-		this._rimWidth = 3;
+		this._rimWidth = 10;
+
+		this._ballRadius = 5;
 
 		this.tableTop = [
-			{x: this._halfTableWidth, y: 0, z: this._halfTableLength},		//top right
-			{x: this._halfTableWidth, y: 0, z: -this._halfTableLength},		//bottom right
 			{x: -this._halfTableWidth, y: 0, z: -this._halfTableLength},	//bottom left
-			{x: -this._halfTableWidth, y: 0, z: this._halfTableLength}		//top left
+			{x: -this._halfTableWidth, y: 0, z: this._halfTableLength},		//top left
+			{x: this._halfTableWidth, y: 0, z: this._halfTableLength},		//top right
+			{x: this._halfTableWidth, y: 0, z: -this._halfTableLength}		//bottom right
+		];
+
+		this.balls = [
+			{x: -this._halfTableWidth + 100, y: -this._ballRadius, z: -this._halfTableLength + 10},
+			{x: -this._halfTableWidth + 20, y: -this._ballRadius, z: this._halfTableLength - 10}
 		];
 
 		this._buildRims();
@@ -64,23 +71,32 @@ exports = Class(UIView, function(supr) {
 
 	this.render = function() {
 		this.tableTop2d = [];
+		this._nearestCorner = 0;
+		var nearestVal = -1000000;
 		for(var i = 0; i < this.tableTop.length; i++){
-			this.tableTop2d.push(GC.app.camera.toCanvas(this.tableTop[i]));
+			var tt2d = GC.app.camera.toCanvas(this.tableTop[i]);
+			if(tt2d.y > nearestVal){
+				nearestVal = tt2d.y;
+				this._nearestCorner = i;
+			}
+			this.tableTop2d.push(tt2d);
 		}
 
 		this._renderLegs();
 		this._renderTableTop();
-		this._renderRims();
+		this._renderFarRims();
+		this._renderBalls();
+		this._renderNearRims();
 	}
 
 	this._renderLegs = function() {
 		var ctx = this._ctx;
-		ctx.fillStyle = "#CC8833";
+		ctx.fillStyle = "#995522";
 		for(var i = 0; i < this.tableTop2d.length; i++){
 			var vertex = this.tableTop2d[i];
 			ctx.beginPath();
-			var r = this._legRadius * vertex.s/10;
-			var h = this._legHeight * vertex.s/10;
+			var r = this._legRadius * vertex.s;
+			var h = this._legHeight * vertex.s;
 			ctx.moveTo(vertex.x - r, vertex.y);
 			ctx.lineTo(vertex.x + r, vertex.y);
 			ctx.lineTo(vertex.x + r, vertex.y + h);
@@ -98,9 +114,10 @@ exports = Class(UIView, function(supr) {
 		});
 	}
 
-	this._renderRims = function() {
-		for(var i = 0; i < this.rims.length; i++) {
-			var rim = this.rims[i];
+	this._renderRims = function(rimIndices) {
+		//if closest corner is 1, far indices will be 2 and 3, near indices will be 0 and 1
+		for(var i = 0; i < rimIndices.length; i++) {
+			var rim = this.rims[rimIndices[i]];
 			for(var j = 0; j < rim.length; j++) {
 				var rimSection = rim[j];
 				var rimSection2d = [];
@@ -113,6 +130,36 @@ exports = Class(UIView, function(supr) {
 					color: "#CC8833"
 				});
 			}
+		}
+	}
+
+	this._renderFarRims = function() {
+		var rimIndices = [];
+		var tt = this.tableTop;
+		rimIndices.push((this._nearestCorner + 1) % tt.length);
+		rimIndices.push((this._nearestCorner + 2) % tt.length);
+		this._renderRims(rimIndices);
+	}
+
+	this._renderNearRims = function() {
+		var rimIndices = [];
+		var tt = this.tableTop;
+		rimIndices.push(this._nearestCorner);
+		rimIndices.push((this._nearestCorner - 1 + tt.length) % tt.length);
+		this._renderRims(rimIndices);
+	}
+
+	this._renderBalls = function() {
+		this.balls2d = [];
+		var ctx = this._ctx;
+		ctx.fillStyle = "#AA2222";
+
+		for(var i = 0; i < this.balls.length; i++){
+			var balls2d = (GC.app.camera.toCanvas(this.balls[i]));
+			ctx.beginPath();
+			ctx.arc(balls2d.x, balls2d.y, this._ballRadius * balls2d.s, 2 * Math.PI, 0, true);
+			ctx.closePath();
+			ctx.fill();
 		}
 	}
 
