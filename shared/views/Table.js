@@ -1,6 +1,7 @@
 "use import";
 
 import timestep.ui.UIView as UIView;
+import ..tools.utils as utils;
 
 exports = Class(UIView, function(supr) {
 
@@ -16,6 +17,9 @@ exports = Class(UIView, function(supr) {
 		this._legInset = 20;
 		this._legRadius = 5;
 
+		this._rimHeight = 5;
+		this._rimWidth = 3;
+
 		this.tableTop = [
 			{x: this._halfTableWidth, y: 0, z: this._halfTableLength},		//top right
 			{x: this._halfTableWidth, y: 0, z: -this._halfTableLength},		//bottom right
@@ -23,12 +27,39 @@ exports = Class(UIView, function(supr) {
 			{x: -this._halfTableWidth, y: 0, z: this._halfTableLength}		//top left
 		];
 
+		this._buildRims();
+
 		GC.app.camera.subscribe('AngleChanged', this, '_zSort');
 
 	}
 
 	this.buildView = function() {
 		supr(this, "buildView", arguments);		
+	}
+
+	this._buildRims = function() {
+		this.rims = [];
+		var tt = this.tableTop;
+		for(var i = 0; i < tt.length; i++) {
+			var rim = [];
+			var nextI = (i + 1) % tt.length;
+			var xOffset = 0;
+			var zOffset = 0;
+			if(tt[i].x === tt[nextI].x){
+				xOffset = this._rimWidth * (tt[i].z > tt[nextI].z ? 1 : -1);
+			}
+			else{
+				zOffset = this._rimWidth * (tt[i].x > tt[nextI].x ? -1 : 1);
+			}
+			var rimTop = [
+				{x: tt[i].x, y: -this._rimHeight, z: tt[i].z},
+				{x: tt[i].x + xOffset, y: -this._rimHeight, z: tt[i].z + zOffset},
+				{x: tt[nextI].x + xOffset, y: -this._rimHeight, z: tt[nextI].z + zOffset},
+				{x: tt[nextI].x, y: -this._rimHeight, z: tt[nextI].z}
+			];
+			rim.push(rimTop);
+			this.rims.push(rim);
+		}
 	}
 
 	this.render = function() {
@@ -39,6 +70,7 @@ exports = Class(UIView, function(supr) {
 
 		this._renderLegs();
 		this._renderTableTop();
+		this._renderRims();
 	}
 
 	this._renderLegs = function() {
@@ -59,20 +91,29 @@ exports = Class(UIView, function(supr) {
 	}
 
 	this._renderTableTop = function() {
-		var ctx = this._ctx;
-		ctx.beginPath();
-		for(var i = 0; i < this.tableTop2d.length; i++){
-			var vertex = this.tableTop2d[i];
-			if(i == 0){
-				ctx.moveTo(vertex.x, vertex.y);
-			}
-			else{
-				ctx.lineTo(vertex.x, vertex.y);
+		utils.fillPoly({
+			ctx: this._ctx,
+			vertices: this.tableTop2d,
+			color: "#228822"
+		});
+	}
+
+	this._renderRims = function() {
+		for(var i = 0; i < this.rims.length; i++) {
+			var rim = this.rims[i];
+			for(var j = 0; j < rim.length; j++) {
+				var rimSection = rim[j];
+				var rimSection2d = [];
+				for(var k = 0; k < rimSection.length; k++) {
+					rimSection2d.push(GC.app.camera.toCanvas(rimSection[k]));
+				}
+				utils.fillPoly({
+					ctx: this._ctx,
+					vertices: rimSection2d,
+					color: "#CC8833"
+				});
 			}
 		}
-		ctx.closePath();
-		ctx.fillStyle = "#228822";
-		ctx.fill();		
 	}
 
 	this._zSort = function() {
