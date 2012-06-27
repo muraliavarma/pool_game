@@ -18,13 +18,13 @@ exports = Class(View, function(supr) {
         	rx: 0,
         	ry: 0,
         	rz: 0,
-			depth: 750,
+			depth: 1000,
 			offsetX: 160,
-			offsetY: 0
+			offsetY: this.CAMERA_HEIGHT / 2
 		};
 
-		this.subscribe('turnRight', this, '_turnRight');
-		this.subscribe('turnLeft', this, '_turnLeft');
+		this.subscribe('TurnRight', this, '_turnRight');
+		this.subscribe('TurnLeft', this, '_turnLeft');
 	}
 
 	this.tick = function() {
@@ -32,11 +32,13 @@ exports = Class(View, function(supr) {
 			this.camera.ry += this.ROTATE_ANGLE;
 			this.camera.z = -Math.cos(this.camera.ry) * this.ROTATE_RADIUS;
 			this.camera.x = Math.sin(this.camera.ry) * this.ROTATE_RADIUS;
+			this.publish('AngleChanged');
 		}
 		else if(this.isTurnLeft){
 			this.camera.ry -= this.ROTATE_ANGLE;
 			this.camera.z = -Math.cos(this.camera.ry) * this.ROTATE_RADIUS;
 			this.camera.x = Math.sin(this.camera.ry) * this.ROTATE_RADIUS;
+			this.publish('AngleChanged');
 		}
 	}
 

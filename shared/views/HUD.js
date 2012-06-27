@@ -36,19 +36,19 @@ exports = Class(UIView, function(supr) {
 		});
 
 		this.turnLeft.onInputStart = function() {
-			GC.app.camera.publish('turnLeft', true);
+			GC.app.camera.publish('TurnLeft', true);
 		}
 
 		this.turnLeft.onInputOut = function() {
-			GC.app.camera.publish('turnLeft', false);
+			GC.app.camera.publish('TurnLeft', false);
 		}
 
 		this.turnRight.onInputStart = function() {
-			GC.app.camera.publish('turnRight', true);
+			GC.app.camera.publish('TurnRight', true);
 		}
 
 		this.turnRight.onInputOut = function() {
-			GC.app.camera.publish('turnRight', false);
+			GC.app.camera.publish('TurnRight', false);
 		}
 
     }
