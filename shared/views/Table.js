@@ -12,7 +12,7 @@ exports = Class(UIView, function(supr) {
 		this._halfTableWidth = 100;
 		this._halfTableLength = 200;
 
-		this._legHeight = 50;
+		this._legHeight = 75;
 		this._legInset = 20;
 		this._legRadius = 5;
 
@@ -32,34 +32,20 @@ exports = Class(UIView, function(supr) {
 	}
 
 	this.render = function() {
-		var tableTop2d = [];
+		this.tableTop2d = [];
 		for(var i = 0; i < this.tableTop.length; i++){
-			tableTop2d.push(GC.app.camera.toCanvas(this.tableTop[i]));
+			this.tableTop2d.push(GC.app.camera.toCanvas(this.tableTop[i]));
 		}
 
-		this._renderLegs(tableTop2d);
-
-		var ctx = this._ctx;
-		ctx.beginPath();
-		for(var i = 0; i < tableTop2d.length; i++){
-			var vertex = tableTop2d[i];
-			if(i == 0){
-				ctx.moveTo(vertex.x, vertex.y);
-			}
-			else{
-				ctx.lineTo(vertex.x, vertex.y);
-			}
-		}
-		ctx.closePath();
-		ctx.fillStyle = "#22CC22";
-		ctx.fill();
+		this._renderLegs();
+		this._renderTableTop();
 	}
 
-	this._renderLegs = function(tableTop2d) {
+	this._renderLegs = function() {
 		var ctx = this._ctx;
 		ctx.fillStyle = "#CC8833";
-		for(var i = 0; i < tableTop2d.length; i++){
-			var vertex = tableTop2d[i];
+		for(var i = 0; i < this.tableTop2d.length; i++){
+			var vertex = this.tableTop2d[i];
 			ctx.beginPath();
 			var r = this._legRadius * vertex.s/10;
 			var h = this._legHeight * vertex.s/10;
@@ -70,6 +56,23 @@ exports = Class(UIView, function(supr) {
 			ctx.closePath();
 			ctx.fill();
 		}
+	}
+
+	this._renderTableTop = function() {
+		var ctx = this._ctx;
+		ctx.beginPath();
+		for(var i = 0; i < this.tableTop2d.length; i++){
+			var vertex = this.tableTop2d[i];
+			if(i == 0){
+				ctx.moveTo(vertex.x, vertex.y);
+			}
+			else{
+				ctx.lineTo(vertex.x, vertex.y);
+			}
+		}
+		ctx.closePath();
+		ctx.fillStyle = "#228822";
+		ctx.fill();		
 	}
 
 	this._zSort = function() {
