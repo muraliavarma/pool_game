@@ -31,6 +31,7 @@ exports = Class(UIView, function(supr) {
 
 		this.balls = [
 			{x: -this._halfTableWidth + 100, y: -this._ballRadius, z: -this._halfTableLength + 10},
+			{x: this._halfTableWidth - 5, y: -this._ballRadius, z: -this._halfTableLength + 10},
 			{x: -this._halfTableWidth + 20, y: -this._ballRadius, z: this._halfTableLength - 10}
 		];
 
@@ -64,7 +65,21 @@ exports = Class(UIView, function(supr) {
 				{x: tt[nextI].x + xOffset, y: -this._rimHeight, z: tt[nextI].z + zOffset},
 				{x: tt[nextI].x, y: -this._rimHeight, z: tt[nextI].z}
 			];
-			rim.push(rimTop);
+			var rimOuter = [
+				{x: tt[i].x + xOffset, y: 0, z: tt[i].z + zOffset},
+				{x: tt[i].x + xOffset, y: -this._rimHeight, z: tt[i].z + zOffset},
+				{x: tt[nextI].x + xOffset, y: -this._rimHeight, z: tt[nextI].z + zOffset},
+				{x: tt[nextI].x + xOffset, y: 0, z: tt[nextI].z + zOffset}
+			];
+			var rimInner = [
+				{x: tt[i].x, y: 0, z: tt[i].z},
+				{x: tt[i].x, y: -this._rimHeight, z: tt[i].z},
+				{x: tt[nextI].x, y: -this._rimHeight, z: tt[nextI].z},
+				{x: tt[nextI].x, y: 0, z: tt[nextI].z}
+			];
+			rim.push({color: '#FF0000', vertices: rimTop});
+			rim.push({color: '#CC8833', vertices: rimOuter});
+			rim.push({color: '#0000FF', vertices: rimInner});
 			this.rims.push(rim);
 		}
 	}
@@ -119,7 +134,7 @@ exports = Class(UIView, function(supr) {
 		for(var i = 0; i < rimIndices.length; i++) {
 			var rim = this.rims[rimIndices[i]];
 			for(var j = 0; j < rim.length; j++) {
-				var rimSection = rim[j];
+				var rimSection = rim[j].vertices;
 				var rimSection2d = [];
 				for(var k = 0; k < rimSection.length; k++) {
 					rimSection2d.push(GC.app.camera.toCanvas(rimSection[k]));
@@ -127,7 +142,7 @@ exports = Class(UIView, function(supr) {
 				utils.fillPoly({
 					ctx: this._ctx,
 					vertices: rimSection2d,
-					color: "#CC8833"
+					color: rim[j].color
 				});
 			}
 		}
