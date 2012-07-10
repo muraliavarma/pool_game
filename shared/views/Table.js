@@ -85,6 +85,18 @@ exports = Class(UIView, function(supr) {
 	}
 
 	this.render = function() {
+
+		var ctx = this._ctx;
+
+		ctx.save();
+		ctx.fillStyle = "#3399FF";
+		ctx.translate(50, 50);
+		ctx.scale(2, 0.5);
+		ctx.rotate((new Date().getTime()) % 360 * Math.PI / 180);
+		ctx.clipRect(0, 0, 50, 50);
+		ctx.fillRect(0, 0, 100, 100);
+		ctx.restore();
+
 		this.tableTop2d = [];
 		this._nearestCorner = 0;
 		var nearestVal = -1000000;
